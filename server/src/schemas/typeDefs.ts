@@ -1,57 +1,62 @@
-const typeDefs = `
+import { gql } from 'apollo-server-express';
+
+const typeDefs = gql`
   type User {
-    _id: ID
-    username: String
-    email: String
-    password: String
-    thoughts: [Thought]!
-  }
-
-  type Thought {
-    _id: ID
-    thoughtText: String
-    thoughtAuthor: String
-    createdAt: String
-    comments: [Comment]!
-  }
-
-  type Comment {
-    _id: ID
-    commentText: String
-    createdAt: String
-  }
-
-  input ThoughtInput {
-    thoughtText: String!
-    thoughtAuthor: String!
-  }
-
-  input UserInput {
+    _id: ID!
     username: String!
     email: String!
-    password: String!
+    bookCount: Int
+    savedBooks: [Book]
   }
-  
+
+  type Book {
+    bookId: String!
+    title: String!
+    authors: [String]
+    description: String
+    image: String
+    link: String
+  }
+
+  # Auth payload: returns a token and user
   type Auth {
     token: ID!
     user: User
   }
 
+  # Input type for saving a book
+  input BookInput {
+    bookId: String!
+    title: String!
+    authors: [String]
+    description: String
+    image: String
+    link: String
+  }
+
   type Query {
-    users: [User]
-    user(username: String!): User
-    thoughts: [Thought]!
-    thought(thoughtId: ID!): Thought
+    # Return the current logged-in user
     me: User
+
+    # Get a user by ID or username
+    getSingleUser(id: ID, username: String): User
+
+    # Search Google Books API
+    searchGoogleBooks(query: String!): [Book]
   }
 
   type Mutation {
-    addUser(input: UserInput!): Auth
+    # Register a new user
+    addUser(username: String!, email: String!, password: String!): Auth
+
+    # Login a user
     login(email: String!, password: String!): Auth
-    addThought(input: ThoughtInput!): Thought
-    addComment(thoughtId: ID!, commentText: String!): Thought
-    removeThought(thoughtId: ID!): Thought
-    removeComment(thoughtId: ID!, commentId: ID!): Thought
+
+    # Save a book to user's savedBooks
+    saveBook(input: BookInput!): User
+
+    # Remove a book by bookId
+    removeBook(bookId: String!): User
   }
 `;
 

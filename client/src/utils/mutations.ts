@@ -12,44 +12,26 @@ export const LOGIN_USER = gql`
   }
 `;
 
-export const ADD_USER = gql`
-  mutation Mutation($input: UserInput!) {
-  addUser(input: $input) {
-    user {
-      username
+export const SAVE_BOOK = gql`
+  mutation SaveBook($input: BookInput!) {
+    saveBook(input: $input) {
       _id
-    }
-    token
-  }
-}
-`;
-
-export const ADD_THOUGHT = gql`
-  mutation AddThought($input: ThoughtInput!) {
-    addThought(input: $input) {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
+      savedBooks {
+        bookId
+        title
+        authors
       }
     }
   }
 `;
 
-export const ADD_COMMENT = gql`
-  mutation addComment($thoughtId: ID!, $commentText: String!) {
-    addComment(thoughtId: $thoughtId, commentText: $commentText) {
+export const REMOVE_BOOK = gql`
+  mutation RemoveBook($bookId: String!) {
+    removeBook(bookId: $bookId) {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        createdAt
+      savedBooks {
+        bookId
+        title
       }
     }
   }
