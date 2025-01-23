@@ -20,9 +20,17 @@ const SearchBooks = () => {
   const [searchInput, setSearchInput] = useState("");
   const [savedBookIds, setSavedBookIds] = useState<string[]>([]);
 
-  const { data: userData, loading: userLoading } = useQuery(GET_ME);
-  const [searchGoogleBooks, { loading: searchLoading, data }] =
+  const { data: userData, loading: userLoading ,error:userError} = useQuery(GET_ME);
+  if (userError) {
+    console.log(JSON.stringify(userError));
+  }
+  
+  const [searchGoogleBooks, { loading: searchLoading, data ,error:searchError}] =
     useLazyQuery(SEARCH_GOOGLE_BOOKS);
+    if (searchError) {
+      console.log(JSON.stringify(searchError));
+    }
+
   const [saveBook] = useMutation(SAVE_BOOK);
 
   useEffect(() => {
@@ -179,3 +187,4 @@ const SearchBooks = () => {
     </>
   );
 };
+export default SearchBooks;
